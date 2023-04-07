@@ -1,4 +1,4 @@
-package com.inviostajyer.rickandmortycharacters.view
+package com.inviostajyer.rickandmortycharacters.view.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -15,11 +15,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import com.inviostajyer.rickandmortycharacters.R
+import com.inviostajyer.rickandmortycharacters.domain.model.Location
+import javax.inject.Inject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomePage() {
+fun HomePage(viewModel : HomeViewModel) {
+    var locationList = viewModel.locationList
     Scaffold(
         topBar = {
             TopAppBar(
@@ -36,36 +40,24 @@ fun HomePage() {
             verticalArrangement = Arrangement.Top,
         )
         {
-            LocationList()
-            CharacterList()
+            LocationList(viewModel, locationList)
+            //CharacterList()
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LocationList() {
-    var selectedChip by remember { mutableStateOf("") }
-    val mockData = listOf(
-        "Özgür",
-        "Ramazan",
-        "Yasin",
-        "Kadir",
-        "Mali",
-        "Fatih",
-        "Tunç",
-        "Hüseyin",
-        "Ebrar",
-        "Süleyman",
-        "Yunus"
-    )
-
+private fun LocationList(viewModel: HomeViewModel, locationList: List<Location>) {
     LazyRow {
-        items(mockData.size) {
+        items(locationList.size) {
             FilterChip(
-                selected = selectedChip == mockData[it],
-                label = { Text(mockData[it]) },
-                onClick = { selectedChip = if (selectedChip == mockData[it]) "" else mockData[it] },
+                selected = viewModel.selectedChip.id == locationList[it].id,
+                label = { Text(locationList[it].name) },
+                onClick = {
+                    viewModel.selectedChip =
+                        if (viewModel.selectedChip.id == locationList[it].id) viewModel.emptyLocation else locationList[it]
+                },
                 modifier = Modifier
                     .padding(5.dp)
             )

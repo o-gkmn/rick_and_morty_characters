@@ -8,9 +8,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.inviostajyer.rickandmortycharacters.core.NavigateHost
+import com.inviostajyer.rickandmortycharacters.domain.interfaces.LocationRepository
 import com.inviostajyer.rickandmortycharacters.ui.theme.RickAndMortyCharactersTheme
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var locationRepository : LocationRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +26,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             RickAndMortyCharactersTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    NavigateHost(preferences)
+                    NavigateHost(preferences, locationRepository)
                 }
             }
         }
