@@ -1,4 +1,4 @@
-package com.inviostajyer.rickandmortycharacters.view
+package com.inviostajyer.rickandmortycharacters.view.details
 
 import androidx.compose.runtime.Composable
 

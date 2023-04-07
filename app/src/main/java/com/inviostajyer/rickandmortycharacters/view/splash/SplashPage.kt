@@ -1,4 +1,4 @@
-package com.inviostajyer.rickandmortycharacters.view
+package com.inviostajyer.rickandmortycharacters.view.splash
 
 import android.content.res.Resources
 import androidx.compose.animation.AnimatedVisibility
@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.inviostajyer.rickandmortycharacters.Pages
+import com.inviostajyer.rickandmortycharacters.core.Pages
 import com.inviostajyer.rickandmortycharacters.R
 import kotlinx.coroutines.delay
 
