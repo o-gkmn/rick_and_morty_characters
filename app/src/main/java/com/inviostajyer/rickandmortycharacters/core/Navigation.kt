@@ -7,7 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.inviostajyer.rickandmortycharacters.domain.interfaces.LocationRepository
+import com.inviostajyer.rickandmortycharacters.domain.interfaces.RickAndMortyRepository
 import com.inviostajyer.rickandmortycharacters.view.details.DetailsPage
 import com.inviostajyer.rickandmortycharacters.view.home.HomePage
 import com.inviostajyer.rickandmortycharacters.view.home.HomeViewModel
@@ -22,7 +22,7 @@ sealed class Pages(var route : String) {
 @Composable
 fun NavigateHost(
     preferences : SharedPreferences,
-    locationRepository: LocationRepository,
+    rickAndMortyRepository: RickAndMortyRepository,
     modifier : Modifier = Modifier,
     navController : NavHostController = rememberNavController(),
     startDestination : String = Pages.SplashPage.route
@@ -43,7 +43,7 @@ fun NavigateHost(
             }
         }
         composable(Pages.HomePage.route) {
-            val viewModel = HomeViewModel(locationRepository)
+            val viewModel = HomeViewModel(rickAndMortyRepository)
             viewModel.getAllLocation()
             HomePage(viewModel)
         }

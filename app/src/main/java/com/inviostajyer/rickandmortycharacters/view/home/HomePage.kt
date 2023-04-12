@@ -15,15 +15,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import com.inviostajyer.rickandmortycharacters.R
+import com.inviostajyer.rickandmortycharacters.domain.model.Character
 import com.inviostajyer.rickandmortycharacters.domain.model.Location
-import javax.inject.Inject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomePage(viewModel : HomeViewModel) {
-    var locationList = viewModel.locationList
+fun HomePage(viewModel: HomeViewModel) {
+    val locationList = viewModel.locationList
+    val characterList = viewModel.characterList
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -41,7 +42,7 @@ fun HomePage(viewModel : HomeViewModel) {
         )
         {
             LocationList(viewModel, locationList)
-            //CharacterList()
+            CharacterList(viewModel, characterList)
         }
     }
 }
@@ -57,32 +58,19 @@ private fun LocationList(viewModel: HomeViewModel, locationList: List<Location>)
                 onClick = {
                     viewModel.selectedChip =
                         if (viewModel.selectedChip.id == locationList[it].id) viewModel.emptyLocation else locationList[it]
+                    viewModel.getCharactersByLocation()
                 },
                 modifier = Modifier
-                    .padding(5.dp)
+                    .padding(5.dp),
             )
         }
     }
 }
 
 @Composable
-private fun CharacterList() {
-    val mockData = listOf(
-        "Özgür",
-        "Ramazan",
-        "Yasin",
-        "Kadir",
-        "Mali",
-        "Fatih",
-        "Tunç",
-        "Hüseyin",
-        "Ebrar",
-        "Süleyman",
-        "Yunus"
-    )
-
+private fun CharacterList(viewModel: HomeViewModel, characterList: List<Character>) {
     LazyColumn {
-        items(mockData.size) {
+        items(viewModel.characterList.size) {
             ElevatedCard(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -107,7 +95,7 @@ private fun CharacterList() {
 //                        contentScale = ContentScale.Crop,
 //                    )
                     Text(
-                        mockData[it],
+                        characterList[it].name,
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(start = 5.dp)
                     )
@@ -115,7 +103,7 @@ private fun CharacterList() {
                         modifier = Modifier
                             .padding(5.dp)
                             .size(100.dp),
-                        painter = painterResource(definitionGenderImage(it)),
+                        painter = painterResource(definitionGenderImage(characterList[it].gender)),
                         contentDescription = "gender",
                         contentScale = ContentScale.Fit,
                         alpha = 0.7f
@@ -138,12 +126,12 @@ private fun definitionGenderColor(index: Int): Color {
     }
 }
 
-private fun definitionGenderImage(index: Int): Int {
-    return if (index % 4 == 0) {
+private fun definitionGenderImage(gender: String): Int {
+    return if (gender.lowercase() == "male") {
         R.drawable.male
-    } else if (index % 4 == 1) {
+    } else if (gender.lowercase() == "female") {
         R.drawable.female
-    } else if (index % 4 == 2) {
+    } else if (gender.lowercase() == "genderless") {
         R.drawable.genderless
     } else {
         R.drawable.unknown

@@ -9,7 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.inviostajyer.rickandmortycharacters.core.NavigateHost
-import com.inviostajyer.rickandmortycharacters.domain.interfaces.LocationRepository
+import com.inviostajyer.rickandmortycharacters.domain.interfaces.RickAndMortyRepository
 import com.inviostajyer.rickandmortycharacters.ui.theme.RickAndMortyCharactersTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject
-    lateinit var locationRepository : LocationRepository
+    lateinit var rickAndMortyRepository: RickAndMortyRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             RickAndMortyCharactersTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    NavigateHost(preferences, locationRepository)
+                    NavigateHost(preferences, rickAndMortyRepository)
                 }
             }
         }
