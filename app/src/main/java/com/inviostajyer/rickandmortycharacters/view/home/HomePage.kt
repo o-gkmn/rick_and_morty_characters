@@ -29,8 +29,18 @@ import com.inviostajyer.rickandmortycharacters.domain.model.Location
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomePage(viewModel: HomeViewModel, navController: NavController) {
+
     val locationList = viewModel.locationList
     val characterList = viewModel.characterList
+
+    if(viewModel.showDialog){
+        SimpleAlertDialog(
+            show = viewModel.showDialog,
+            onDismiss = {viewModel.showDialog = false},
+            onConfirm = {viewModel.showDialog = false},
+            text = viewModel.exceptionText
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -64,7 +74,7 @@ private fun LocationList(viewModel: HomeViewModel, locationList: List<Location>)
                 label = { Text(locationList[it].name) },
                 onClick = {
                     viewModel.selectedChip =
-                        if (viewModel.selectedChip.id == locationList[it].id) viewModel.emptyLocation else locationList[it]
+                        if (viewModel.selectedChip.id == locationList[it].id) Location.emptyLocation() else locationList[it]
                     viewModel.getCharactersByLocation()
                 },
                 modifier = Modifier
@@ -110,6 +120,30 @@ private fun CharacterList(viewModel: HomeViewModel, characterList: List<Characte
                 }
             }
         }
+    }
+}
+
+@Composable
+fun SimpleAlertDialog(
+    show: Boolean,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+    text : String
+) {
+    if (show) {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            confirmButton = {
+                TextButton(onClick = onConfirm)
+                { Text(text = "OK") }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismiss)
+                { Text(text = "Cancel") }
+            },
+            title = { Text(text = "HATA") },
+            text = { Text(text = text) }
+        )
     }
 }
 

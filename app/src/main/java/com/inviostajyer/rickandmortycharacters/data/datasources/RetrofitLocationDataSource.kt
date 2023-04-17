@@ -4,44 +4,77 @@ import com.inviostajyer.rickandmortycharacters.data.interfaces.RickAndMortyApi
 import com.inviostajyer.rickandmortycharacters.data.interfaces.RickAndMortyDatasource
 import com.inviostajyer.rickandmortycharacters.domain.model.Character
 import com.inviostajyer.rickandmortycharacters.domain.model.Location
+import retrofit2.HttpException
+import java.io.IOException
 import javax.inject.Inject
 
-class RetrofitLocationDataSource @Inject constructor(private val rickAndMortyApi: RickAndMortyApi) : RickAndMortyDatasource {
+class RetrofitLocationDataSource @Inject constructor(private val rickAndMortyApi: RickAndMortyApi) :
+    RickAndMortyDatasource {
     override suspend fun getAllLocations(): List<Location> {
-        val locationList = rickAndMortyApi.getAllLocations().execute()
+        try {
+            val getAllLocationCall = rickAndMortyApi.getAllLocations()
+            val locationList = getAllLocationCall.execute()
 
-        if (locationList.isSuccessful) {
-            return locationList.body()!!.locationList
-        } else {
-            throw Exception("Bir sorun oluştu")
+            if (locationList.isSuccessful) {
+                return locationList.body()!!.locationList
+            }
+        } catch (e: IOException) {
+            throw e
+        } catch (e: HttpException) {
+            throw e
+        } catch (e: Exception) {
+            throw e
         }
+        return arrayListOf()
     }
 
     override suspend fun getLocation(id: Int): Location {
-        val location = rickAndMortyApi.getLocation(id).execute()
-        if (location.isSuccessful) {
-            return location.body()!!
-        } else {
-            throw Exception("Bir sorun oluştu")
+        try {
+            val location = rickAndMortyApi.getLocation(id).execute()
+
+            if (location.isSuccessful) {
+                return location.body()!!
+            }
+        } catch (e: IOException) {
+            throw e
+        } catch (e: HttpException) {
+            throw e
+        } catch (e: Exception) {
+            throw e
         }
+        return Location.emptyLocation()
     }
 
     override suspend fun getAllCharactersByLocation(characterIds: List<Int>): List<Character> {
-        val characterList = rickAndMortyApi.getAllCharactersByLocation(characterIds).execute()
+        try {
+            val characterList = rickAndMortyApi.getAllCharactersByLocation(characterIds).execute()
 
-        if(characterList.isSuccessful){
-            return characterList.body()!!
-        }else{
-            throw Exception("Bir sorun oluştu")
+            if (characterList.isSuccessful) {
+                return characterList.body()!!
+            }
+        } catch (e: IOException) {
+            throw e
+        } catch (e: HttpException) {
+            throw e
+        } catch (e: Exception) {
+            throw e
         }
+        return arrayListOf()
     }
 
     override suspend fun getCharacters(id: Int): Character {
-        val character = rickAndMortyApi.getCharacter(id).execute()
-        if (character.isSuccessful) {
-            return character.body()!!
-        } else {
-            throw Exception("Bir sorun oluştu")
+        try {
+            val character = rickAndMortyApi.getCharacter(id).execute()
+            if (character.isSuccessful) {
+                return character.body()!!
+            }
+        } catch (e: IOException) {
+            throw e
+        } catch (e: HttpException) {
+            throw e
+        } catch (e: Exception) {
+            throw e
         }
+        return Character.emptyCharacter()
     }
 }

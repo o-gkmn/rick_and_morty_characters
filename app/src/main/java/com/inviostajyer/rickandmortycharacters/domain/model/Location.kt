@@ -8,4 +8,17 @@ data class Location(
     val residents: List<String>,
     val url: String,
     val created: String
-)
+) {
+    companion object {
+        fun emptyLocation(): Location =
+            Location(
+                id = -1,
+                name = "",
+                type = "",
+                dimension = "",
+                residents = arrayListOf(),
+                url = "",
+                created = ""
+            )
+    }
+}
