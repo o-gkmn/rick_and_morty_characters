@@ -11,9 +11,10 @@ import coil.compose.rememberImagePainter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import coil.annotation.ExperimentalCoilApi
 import com.inviostajyer.rickandmortycharacters.view.home.SimpleAlertDialog
-import java.util.NoSuchElementException
 
+@ExperimentalCoilApi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsPage(viewModel: DetailsViewModel) {
@@ -55,6 +56,7 @@ fun DetailsPage(viewModel: DetailsViewModel) {
 }
 
 
+@ExperimentalCoilApi
 @Composable
 fun PortraitView(viewModel: DetailsViewModel, paddingValues: PaddingValues) {
     val episodesList = arrayListOf<String>()
@@ -93,6 +95,7 @@ fun PortraitView(viewModel: DetailsViewModel, paddingValues: PaddingValues) {
     }
 }
 
+@ExperimentalCoilApi
 @Composable
 fun LandScapeView(viewModel: DetailsViewModel, paddingValues: PaddingValues) {
     val episodesList = arrayListOf<String>()

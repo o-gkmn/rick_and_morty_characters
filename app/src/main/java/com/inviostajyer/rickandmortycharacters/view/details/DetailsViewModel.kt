@@ -3,7 +3,6 @@ package com.inviostajyer.rickandmortycharacters.view.details
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.lifecycle.ViewModel
 import com.inviostajyer.rickandmortycharacters.domain.interfaces.RickAndMortyRepository
 import com.inviostajyer.rickandmortycharacters.domain.model.Character

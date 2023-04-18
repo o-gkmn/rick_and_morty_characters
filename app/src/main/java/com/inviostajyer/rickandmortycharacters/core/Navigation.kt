@@ -10,7 +10,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.inviostajyer.rickandmortycharacters.domain.interfaces.RickAndMortyRepository
-import com.inviostajyer.rickandmortycharacters.domain.model.Character
 import com.inviostajyer.rickandmortycharacters.view.details.DetailsPage
 import com.inviostajyer.rickandmortycharacters.view.details.DetailsViewModel
 import com.inviostajyer.rickandmortycharacters.view.home.HomePage
@@ -48,7 +47,6 @@ fun NavigateHost(
         }
         composable(Pages.HomePage.route) {
             val viewModel = HomeViewModel(rickAndMortyRepository)
-            viewModel.getAllLocation()
             HomePage(viewModel, navController)
         }
         composable(

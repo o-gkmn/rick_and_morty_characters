@@ -6,38 +6,36 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
-import com.inviostajyer.rickandmortycharacters.R
 import com.inviostajyer.rickandmortycharacters.core.Pages
 import com.inviostajyer.rickandmortycharacters.domain.model.Character
 import com.inviostajyer.rickandmortycharacters.domain.model.Location
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomePage(viewModel: HomeViewModel, navController: NavController) {
-
-    val locationList = viewModel.locationList
     val characterList = viewModel.characterList
 
-    if(viewModel.showDialog){
+    if (viewModel.showDialog) {
         SimpleAlertDialog(
             show = viewModel.showDialog,
-            onDismiss = {viewModel.showDialog = false},
-            onConfirm = {viewModel.showDialog = false},
+            onDismiss = { viewModel.showDialog = false },
+            onConfirm = { viewModel.showDialog = false },
             text = viewModel.exceptionText
         )
     }
@@ -58,7 +56,7 @@ fun HomePage(viewModel: HomeViewModel, navController: NavController) {
             verticalArrangement = Arrangement.Top,
         )
         {
-            LocationList(viewModel, locationList)
+            LocationList(viewModel)
             CharacterList(viewModel, characterList, navController)
         }
     }
@@ -66,20 +64,49 @@ fun HomePage(viewModel: HomeViewModel, navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LocationList(viewModel: HomeViewModel, locationList: List<Location>) {
-    LazyRow {
-        items(locationList.size) {
-            FilterChip(
-                selected = viewModel.selectedChip.id == locationList[it].id,
-                label = { Text(locationList[it].name) },
-                onClick = {
-                    viewModel.selectedChip =
-                        if (viewModel.selectedChip.id == locationList[it].id) Location.emptyLocation() else locationList[it]
-                    viewModel.getCharactersByLocation()
-                },
-                modifier = Modifier
-                    .padding(5.dp),
-            )
+private fun LocationList(viewModel: HomeViewModel) {
+    val locationList = viewModel.locations.collectAsLazyPagingItems()
+    LazyRow (
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        items(locationList) {
+            it?.let {location->
+                FilterChip(
+                    selected = viewModel.selectedChip.id == location.id,
+                    label = { Text(location.name) },
+                    onClick = {
+                        viewModel.selectedChip =
+                            if (viewModel.selectedChip.id == location.id) Location.emptyLocation() else location
+                        viewModel.getCharactersByLocation()
+                    },
+                    modifier = Modifier
+                        .padding(5.dp),
+                )
+            }
+        }
+
+        when (val state = locationList.loadState.refresh){
+            is LoadState.Error -> {
+                viewModel.showDialog = true
+                viewModel.exceptionText = state.error.localizedMessage!!.toString()
+            }
+            is LoadState.Loading -> {
+                item {
+                    CircularProgressIndicator(modifier = Modifier.size(30.dp))
+                }
+            }
+            else -> {}
+        }
+
+        when(val state = locationList.loadState.append) {
+            is LoadState.Error -> {
+                viewModel.showDialog = true
+                viewModel.exceptionText = state.error.message.toString()
+            }
+            is LoadState.Loading -> {
+                item { CircularProgressIndicator(modifier = Modifier.size(30.dp)) }
+            }
+            else -> {}
         }
     }
 }
@@ -95,7 +122,7 @@ private fun CharacterList(viewModel: HomeViewModel, characterList: List<Characte
                     .height(120.dp)
                     .padding(5.dp)
                     .clickable {
-                               navController.navigate(Pages.DetailsPage.route + "/" + characterList[it].id)
+                        navController.navigate(Pages.DetailsPage.route + "/" + characterList[it].id)
                     },
                 shape = RoundedCornerShape(12.dp)
             ) {
@@ -111,8 +138,9 @@ private fun CharacterList(viewModel: HomeViewModel, characterList: List<Characte
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(start = 5.dp)
                     )
-                    Image(modifier = Modifier
-                        .clip(RoundedCornerShape(12.dp)),
+                    Image(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(12.dp)),
                         painter = rememberImagePainter(characterList[it].image),
                         contentDescription = "character image",
                         contentScale = ContentScale.Fit,
@@ -128,7 +156,7 @@ fun SimpleAlertDialog(
     show: Boolean,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
-    text : String
+    text: String
 ) {
     if (show) {
         AlertDialog(

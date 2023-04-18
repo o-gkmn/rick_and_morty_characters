@@ -6,10 +6,11 @@ import com.inviostajyer.rickandmortycharacters.domain.model.LocationList
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface RickAndMortyApi {
-    @GET("/api/location?page=1")
-    fun getAllLocations() : Call<LocationList>
+    @GET("/api/location")
+    fun getAllLocations(@Query("page") pageNum : Int) : Call<LocationList>
 
     @GET("/api/location/{id}")
     fun getLocation(@Path("id") id : Int) : Call<Location>

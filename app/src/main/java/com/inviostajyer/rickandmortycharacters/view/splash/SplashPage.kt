@@ -14,14 +14,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.inviostajyer.rickandmortycharacters.core.Pages
 import com.inviostajyer.rickandmortycharacters.R
-import com.inviostajyer.rickandmortycharacters.view.details.LandScapeView
 import kotlinx.coroutines.delay
 
 @Composable
@@ -79,20 +77,18 @@ fun LandScapeView(visible : Boolean, welcomeText: String) {
     Row (modifier = Modifier
         .fillMaxSize()
         .background(Color(14,132,66,255)),
-        horizontalArrangement = Arrangement.SpaceEvenly,
+        horizontalArrangement = Arrangement.spacedBy(Resources.getSystem().displayMetrics.ydpi.dp / 3),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
             painter = painterResource(R.drawable.rick_and_morty_logo),
             contentDescription = "rick and morty logo",
             modifier = Modifier
-                .size(Resources.getSystem().displayMetrics.ydpi.dp / 3)
+                .size(Resources.getSystem().displayMetrics.ydpi.dp / 2)
         )
         Image(
             painter = painterResource(R.drawable.rick_and_morty),
             "rick and morty",
-            modifier = Modifier
-                .size(Resources.getSystem().displayMetrics.ydpi.dp)
         )
         if(!visible){
             Text("", style = MaterialTheme.typography.titleLarge, color = Color.White)

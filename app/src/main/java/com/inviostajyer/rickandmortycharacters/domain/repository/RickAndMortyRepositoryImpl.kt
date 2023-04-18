@@ -1,12 +1,14 @@
 package com.inviostajyer.rickandmortycharacters.domain.repository
 
+import androidx.paging.PagingData
 import com.inviostajyer.rickandmortycharacters.data.interfaces.RickAndMortyDatasource
 import com.inviostajyer.rickandmortycharacters.domain.interfaces.RickAndMortyRepository
 import com.inviostajyer.rickandmortycharacters.domain.model.Character
 import com.inviostajyer.rickandmortycharacters.domain.model.Location
+import kotlinx.coroutines.flow.Flow
 
 class RickAndMortyRepositoryImpl(private val rickAndMortyDataSource: RickAndMortyDatasource) : RickAndMortyRepository {
-    override suspend fun getAllLocations(): List<Location> {
+    override fun getAllLocations(): Flow<PagingData<Location>> {
         return rickAndMortyDataSource.getAllLocations()
     }
 
